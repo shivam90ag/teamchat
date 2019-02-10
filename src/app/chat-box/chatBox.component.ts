@@ -16,7 +16,6 @@ export class ChatBoxComponent {
   ngOnInit() {
     this.chatService.socket.on('getText', (textObj: any) => {
       let user = this.chatService.users.find(obj => obj.token === textObj.from);
-      console.log("----------", user, textObj)
       if (user) {
         user['chatBox'] = user['chatBox'] || [];
         user.chatBox.push(textObj);

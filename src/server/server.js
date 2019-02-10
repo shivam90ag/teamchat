@@ -15,7 +15,11 @@ let userTokens = [];
 
 
 io.on('connection', (socket) => {
-    console.log("----------",socket.id)
+    socket.on('reconnect', (token)=>{
+        if(token && users && users[token]){
+            users[token].socketId = socket.id;
+        }
+    });
     socket.on('getUsersList',(token)=>{
         if(token && users[token]){
             socket.emit('usersList', users);

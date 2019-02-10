@@ -4,6 +4,7 @@ import * as io from 'socket.io-client';
 export type InternalStateType = {
     [key: string]: any
 };
+var that:any;
 
 @Injectable()
 export class ChatService {
@@ -18,6 +19,14 @@ export class ChatService {
             reconnectionDelay: 1000,
             reconnectionDelayMax: 5000,
             reconnectionAttempts: Infinity
+        });
+        that=this;
+        this.socket.on('connect',function(){ 
+            let token = localStorage.getItem("userToken") || '';
+            if(token){
+                // Send token event right after connect:
+                that.socket.emit('reconnect', token);
+            }
         });
     }
     private _clone(object: InternalStateType) {
