@@ -5,6 +5,7 @@
   "description": "",
   "scripts": {
     "start": "webpack-dev-server --inline --progress --port 8080",
+    "serve":"node src/server/server.js",
     "build": "rimraf dist && webpack --config config/webpack.prod.js --bail",
     "lint": "tslint ./src/**/*.ts -t verbose"
   },
