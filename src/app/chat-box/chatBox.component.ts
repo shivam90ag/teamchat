@@ -18,21 +18,53 @@ export class ChatBoxComponent {
     }
     ngOnChanges(){
       console.log("----------",this.activeTabUser)
+      this.deactivateAllTab();
       if(this.chatService.users && this.chatService.users.length){
         let obj= this.chatService.users.find(obj=>obj.token===this.activeTabUser.token);
         obj.isTabOpened = true;
         obj.isTabActive = true;
       console.log("2----------",this.chatService.users)
       }
-      if(this.activatedTabToken){
-        let obj= this.chatService.users.find(obj=>obj.token===this.activatedTabToken);
-        obj.isTabActive = false;
-      }
-      this.activatedTabToken = this.activeTabUser ? this.activeTabUser.token : '';
 
     }
-    closeTab(user:any){
+    closeTab(user:any, index:number){
       user.isTabOpened=false;
       user.isTabActive=false;
+      if(index>0){
+        console.log("1->",index)
+        for(let i=index-1; i>=0; i--){
+        console.log("2->",i)
+
+          if(this.chatService.users[i].isTabOpened){
+        console.log("3->",this.chatService.users[i])
+
+            this.chatService.users[i].isTabActive =true;
+            return
+          }
+          for(let i=index-1; i<=this.chatService.users.length; i++){
+            console.log("2->",i)
+    
+              if(this.chatService.users[i].isTabOpened){
+            console.log("3->",this.chatService.users[i])
+    
+                this.chatService.users[i].isTabActive =true;
+                return
+              }
+            }
+        }
+      }
+    }
+    deactivateAllTab(){
+      if(this.chatService.users)
+      for(let u of this.chatService.users){
+        u.isTabActive=false;
+      }
+    }
+    selectTab(user:any){
+      this.deactivateAllTab();
+      console.log("---",user)
+      console.log("---2",this.chatService.users)
+      user.isTabActive = true;
+      user.isTabOpened = true;
     }
  }

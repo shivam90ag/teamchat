@@ -32,6 +32,7 @@ io.on('connection', (socket) => {
         users[token].isCreated = true;
         users[token].socketId = socket.id;
         users[token].isActive = true;
+        users[token].flag = user.flag;
         users[token].name = user.firstName + ' ' + user.lastName;
         socket.broadcast.emit('usersList', users);
         socket.emit('userCreated', token)

@@ -1,17 +1,49 @@
 <div class="col" style="padding-top: 65px !important;padding-left: 300px;">
-      
-    <ul class="nav nav-tabs">
-      <li class="nav-item" *ngFor="let user of chatService.users;">
-        <a *ngIf="user.isTabOpened" class="nav-link" [class]="user.isTabActive ? 'nav-link show active' : 'nav-link show fade'" data-toggle="tab" [href]="'#'+user.token">{{user?.name}}</a>
-        <button *ngIf="user.isTabOpened" type="button" class="close" (click)="closeTab(user)">
-            <span aria-hidden="true">&times;</span>
-        </button>
-      </li>
-    </ul>
 
-    <!-- Tab panes -->
-    <div class="tab-content">
-      <div class="tab-pane container" [class]="user.isTabActive ? 'active' : 'fade'" [id]="user.token" *ngFor="let user of chatService.users;">.home..</div>
-    </div>
+  <ul class="nav nav-tabs">
+    <li class="nav-item" *ngFor="let user of chatService.users; let i=index">
+      <a *ngIf="user?.isTabOpened" class="nav-link" [class]="user?.isTabActive ? 'nav-link show active' : 'nav-link show fade'"
+        data-toggle="tab" [href]="'#'+user.token" (click)="selectTab(user)">{{user?.name}}</a>
+      <button *ngIf="user?.isTabOpened" type="button" class="close" (click)="closeTab(user,i)">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div [class]="user?.isTabActive ? 'tab-pane container active' : 'tab-pane container fade'" [id]="user.token" *ngFor="let user of chatService.users;">
+      <div class="chat_container">
+        <img [src]="user.flag || 'https://restcountries.eu/data/dza.svg'" [alt]="user.name">
+        <p>Hello. How are you today?</p>
+        <span class="time-right">11:00</span>
+      </div>
+
+      <div class="chat_container darker">
+        <img src="/w3images/avatar_g2.jpg" alt="Avatar" class="right">
+        <p>Hey! I'm fine. Thanks for asking!</p>
+        <span class="time-left">11:01</span>
+      </div>
+
+      <div class="chat_container">
+        <img src="/w3images/bandmember.jpg" alt="Avatar">
+        <p>Sweet! So, what do you wanna do today?</p>
+        <span class="time-right">11:02</span>
+      </div>
+
+      <div class="chat_container darker">
+        <img src="/w3images/avatar_g2.jpg" alt="Avatar" class="right">
+        <p>Nah, I dunno. Play soccer.. or learn more coding perhaps?</p>
+        <span class="time-left">11:05</span>
+      </div>
+      <div *ngIf="user?.isTabActive " class="chat-input-pan">
+          <div class="input-group">
+              <textarea class="form-control" aria-label="With textarea"></textarea>
+              <div class="input-group-append">
+                  <button class="btn btn-primary ">Send</button>
+              </div>
+            </div>
+      </div>
   </div>
-  
+</div>
+</div>
