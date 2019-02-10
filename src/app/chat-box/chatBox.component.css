@@ -10,7 +10,7 @@
   /* Darker chat chat_container */
   .darker {
     border-color: #ccc;
-    background-color: green;
+    background-color: #CDFFC1;
   }
   .lighter{
     border-color: #ccc;
@@ -61,7 +61,7 @@
   .chat-input-pan{
       position: fixed;
       width: 985px;
-      bottom: 0px;
+      bottom: 100px;
   }
  .input-group{
      height: 45px;;

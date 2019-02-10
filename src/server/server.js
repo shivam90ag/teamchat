@@ -15,7 +15,7 @@ let userTokens = [];
 
 
 io.on('connection', (socket) => {
-
+    console.log("----------",socket.id)
     socket.on('getUsersList',(token)=>{
         if(token && users[token]){
             socket.emit('usersList', users);
@@ -24,8 +24,9 @@ io.on('connection', (socket) => {
     socket.on('sendText',(textObj)=>{
         if(users && users[textObj.to]){
             let socketId = users[textObj.to].socketId;
-            console.log("-------->>",socketId)
-            io.to(socketId).emit('getText',textObj);
+            if(io.sockets.connected[socketId]){
+                io.sockets.connected[socketId].emit('getText',textObj);
+            }
         }
 
     })
