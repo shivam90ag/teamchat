@@ -10,9 +10,12 @@
   /* Darker chat chat_container */
   .darker {
     border-color: #ccc;
+    background-color: green;
+  }
+  .lighter{
+    border-color: #ccc;
     background-color: #ddd;
   }
-  
   /* Clear floats */
   .chat_container::after {
     content: "";
@@ -53,11 +56,16 @@
     max-height: 400px;
     min-height: 400px;
     width: 1000px;
+    border: 1px solid lightgray;
   }
   .chat-input-pan{
       position: fixed;
       width: 985px;
+      bottom: 0px;
   }
  .input-group{
      height: 45px;;
+ }
+ textarea{
+     height: 45px;
  }

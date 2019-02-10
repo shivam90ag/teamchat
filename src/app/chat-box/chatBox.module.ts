@@ -1,9 +1,10 @@
 import { NgModule } from "@angular/core";
 import { ChatBoxComponent } from "./chatBox.component";
 import { BrowserModule } from "@angular/platform-browser";
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
-    imports:[BrowserModule],
+    imports:[BrowserModule,FormsModule],
     declarations: [
         ChatBoxComponent
     ],

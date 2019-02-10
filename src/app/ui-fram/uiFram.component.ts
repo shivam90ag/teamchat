@@ -39,12 +39,9 @@ export class UiFramComponent {
 
                 }
             }
-            console.log("========>2",userList)
-
             this.users = JSON.parse(JSON.stringify(userList));
             this.chatService.users = JSON.parse(JSON.stringify(userList));
         });
-
 
     }
     // convenience getter for easy access to form fields
@@ -59,11 +56,8 @@ export class UiFramComponent {
                     this.setProfile(user)
                 }
             }, (e: any) => {
-
             })
         }
-
-
     }
     createForm() {
         this.registerForm = this.formBuilder.group({

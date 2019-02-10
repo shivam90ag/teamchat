@@ -21,6 +21,14 @@ io.on('connection', (socket) => {
             socket.emit('usersList', users);
         }
     })
+    socket.on('sendText',(textObj)=>{
+        if(users && users[textObj.to]){
+            let socketId = users[textObj.to].socketId;
+            console.log("-------->>",socketId)
+            io.to(socketId).emit('getText',textObj);
+        }
+
+    })
     socket.on('createUser', (user) => {
         if(user && user.token && users[user.token]){
             delete users[user.token];

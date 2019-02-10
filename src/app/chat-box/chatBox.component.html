@@ -13,13 +13,14 @@
   <!-- Tab panes -->
   <div class="tab-content">
     <div [class]="user?.isTabActive ? 'tab-pane container active' : 'tab-pane container fade'" [id]="user.token" *ngFor="let user of chatService.users;">
-      <div class="chat_container">
-        <img [src]="user.flag || 'https://restcountries.eu/data/dza.svg'" [alt]="user.name">
-        <p>Hello. How are you today?</p>
-        <span class="time-right">11:00</span>
+      <div class="chat_container" [ngClass]="chat.from === user.token ? 'darker' : 'lighter'" *ngFor="let chat of user?.chatBox">
+        <!-- <img [src]="user.flag || 'https://restcountries.eu/data/dza.svg'" [alt]="user.name"> -->
+        
+        <p>{{chat?.message}}</p>
+        <!-- <span class="time-right">11:00</span> -->
       </div>
 
-      <div class="chat_container darker">
+      <!-- <div class="chat_container darker">
         <img src="/w3images/avatar_g2.jpg" alt="Avatar" class="right">
         <p>Hey! I'm fine. Thanks for asking!</p>
         <span class="time-left">11:01</span>
@@ -35,12 +36,12 @@
         <img src="/w3images/avatar_g2.jpg" alt="Avatar" class="right">
         <p>Nah, I dunno. Play soccer.. or learn more coding perhaps?</p>
         <span class="time-left">11:05</span>
-      </div>
+      </div> -->
       <div *ngIf="user?.isTabActive " class="chat-input-pan">
           <div class="input-group">
-              <textarea class="form-control" aria-label="With textarea"></textarea>
+              <textarea class="form-control" aria-label="With textarea" [(ngModel)]="text"></textarea>
               <div class="input-group-append">
-                  <button class="btn btn-primary ">Send</button>
+                  <button class="btn btn-primary " (click)="sendText(user)">Send</button>
               </div>
             </div>
       </div>
