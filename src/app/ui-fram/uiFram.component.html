@@ -1,0 +1,187 @@
+<nav class="navbar navbar-expand-md navbar-dark nav-bg fixed-top">
+    <a class="navbar-brand">
+        <span class="menu-collapsed">TeamChat</span>
+    </a>
+    <div class="nav-profile">
+        <a class="cursor-pointer" (click)="openProfile()">
+            <span class="menu-collapsed">{{user? 'Profile': 'Create Profile'}}</span>
+        </a>
+        <img *ngIf="selectedCountry?.flag" class="img-responsive img-thumbnail flag" [src]="selectedCountry?.flag">
+
+    </div>
+</nav>
+<!-- NavBar END -->
+
+
+<!-- Bootstrap row -->
+<div class="row" id="body-row">
+    <!-- Sidebar -->
+    <div class="page-wrapper theme toggled">
+        <nav id="sidebar" class="sidebar-wrapper">
+            <div class="sidebar-content">
+                <div class="sidebar-header">
+                    <div class="user-pic">
+                        <img class="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg"
+                            alt="User picture">
+                    </div>
+                    <div *ngIf="!user" class="user-info">No Profile</div>
+                    <div *ngIf="user" class="user-info">
+                        <span class="user-name">{{user?.firstName || 'FirstName'}}
+                            <strong>{{user?.lastName || 'LastName'}}</strong>
+                        </span>
+                        <span class="user-status">
+                            <i class="fa fa-circle"></i>
+                            <span>{{user ? 'Online' : 'Offline'}}</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="sidebar-menu">
+                    <ul>
+                        <li class="sidebar-dropdown">
+                            <a>
+                                <i class="fa fa-users"></i>
+                                <span>Users</span>
+                            </a>
+                            <div class="sidebar-submenu" style="display:block;">
+                                <ul *ngIf="users.length">
+                                    <li *ngFor="let user of users">
+                                        <a class="user-status text-overflow cursor-pointer" (click)="activeTabUser=user">
+                                            <i class="fa fa-circle" [ngClass]="user.isActive ? 'user-active' : ''"></i>
+                                            {{user?.name}}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- sidebar-menu  -->
+            </div>
+            <!-- sidebar-content  -->
+            <div class="sidebar-footer">
+                <a>
+                    <i class="fa fa-envelope"></i>
+                    <span class="badge badge-pill badge-warning notification">3</span>
+                </a>
+            </div>
+        </nav>
+        <!-- sidebar-wrapper  -->
+
+        <!-- page-content" -->
+    </div>
+
+    <!-- sidebar-container END -->
+
+    <!-- MAIN -->
+    <chat-box [activeTabUser]="activeTabUser"></chat-box>
+    <!-- Main Col END -->
+
+</div>
+
+<div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">Profile</h4>
+                <button type="button" class="close" (click)="resetForm()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <form [formGroup]="registerForm">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" formControlName="firstName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+                        <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+                            <div *ngIf="f.firstName.errors.required">First Name is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" formControlName="lastName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
+                        <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+                            <div *ngIf="f.lastName.errors.required">Last Name is required</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-sm-8">
+                            <div class="form-group">
+                                <label>Country <span class="badge badge-secondary">
+                                        {{selectedCountry?.alpha2Code}}
+                                    </span></label>
+                                <select class="form-control" formControlName="countryName" [ngClass]="{ 'is-invalid': submitted && f.countryName.errors }"
+                                    (ngModelChange)="selectCountry($event)">
+                                    <option *ngFor="let country of countryList; let i= index;" [value]="i">{{country?.name}}</option>
+                                </select>
+                                <div *ngIf="submitted && f.countryName.errors" class="invalid-feedback">
+                                    <div *ngIf="f.countryName.errors.required">Country is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-sm-4">
+                            <div class="form-group">
+                                <label>Flag</label>
+                                <div class="">
+                                    <img class="img-responsive img-thumbnail flag" [src]="selectedCountry?.flag">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-sm-6">
+                            <div class="form-group">
+                                <label>Currency</label>
+                                <select class="form-control" formControlName="currency" [ngClass]="{ 'is-invalid': submitted && f.currency.errors }">
+                                    <option *ngFor="let currency of selectedCountry.currencies; let i=index" [value]="currency.code">{{currency.code}}</option>
+                                </select>
+                                <div *ngIf="submitted && f.currency.errors" class="invalid-feedback">
+                                    <div *ngIf="f.currency.errors.required">currency is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-sm-6">
+                            <div class="form-group">
+                                <label>Timezone</label>
+                                <select class="form-control" formControlName="timezone" [ngClass]="{ 'is-invalid': submitted && f.timezone.errors }">
+                                    <option *ngFor="let timezone of selectedCountry.timezones; let i= index;" [value]="timezone">{{timezone}}</option>
+                                </select>
+                                <div *ngIf="submitted && f.timezone.errors" class="invalid-feedback">
+                                    <div *ngIf="f.timezone.errors.required">Timezone is required</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-sm-3">
+                            <div class="form-group">
+                                <label>Code</label>
+                                <select class="form-control" formControlName="callingCode" [ngClass]="{ 'is-invalid': submitted && f.callingCode.errors }">
+                                    <option *ngFor="let callingCode of selectedCountry.callingCodes" [value]="callingCode">{{callingCode}}</option>
+                                </select>
+                                <div *ngIf="submitted && f.callingCode.errors" class="invalid-feedback">
+                                    <div *ngIf="f.callingCode.errors.required">callingCode is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-sm-9">
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="text" class="form-control" formControlName="phone" [ngClass]="{ 'is-invalid': submitted && f.phone.errors }" />
+                                <div *ngIf="submitted && f.phone.errors" class="invalid-feedback">
+                                    <div *ngIf="f.phone.errors.pattern">Phone Number must be only 10 digit</div>
+                                    <div *ngIf="f.phone.errors.required">Phone Number is required</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer d-flex">
+                <button class="btn btn-primary" data-dismiss="modal" aria-label="Close" (click)="resetForm()">Cancel
+                </button>
+                <button class="btn btn-success" (click)="onSubmitForm()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
