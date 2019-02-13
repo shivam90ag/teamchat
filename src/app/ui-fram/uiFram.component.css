@@ -68,7 +68,18 @@
   .sidebar-wrapper a {
     text-decoration: none;
   }
-  
+  .online_users{
+    height: 200px;
+    min-height: 100px;
+    overflow: scroll;
+  }
+  .add-group-icon{
+    color: #5cb85c;
+    margin-left: 20px;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 15px;
+  }
   /*----------------sidebar-content----------------*/
   
   .sidebar-content {

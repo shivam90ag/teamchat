@@ -12,11 +12,14 @@ declare var jQuery: any;
 })
 export class UiFramComponent {
     registerForm: FormGroup;
+    newGroupForm: FormGroup;
+    submittedGroupForm = false;
     submitted = false;
     countryList: Array<any> = [];
     selectedCountry: any = {};
     user: any;
     users: Array<any> = [];
+    groups:Array<any>=[];
     token:any;
     activeTabUser:any;
     constructor(private formBuilder: FormBuilder, private httpService: HttpService, private chatService: ChatService) { }
@@ -46,6 +49,7 @@ export class UiFramComponent {
     }
     // convenience getter for easy access to form fields
     get f() { return this.registerForm.controls; }
+    get gf() { return this.newGroupForm.controls; }
     getProfile() {
         if (this.token) {
             this.chatService.getUser(this.token, (user: any) => {
@@ -70,6 +74,10 @@ export class UiFramComponent {
             currency: ['', Validators.required],
             timezone: ['', Validators.required],
             flag: ['', Validators.required]
+        });
+        this.newGroupForm = this.formBuilder.group({
+            name: ['', Validators.required],
+            users: [[], Validators.required],
         });
     }
     setProfile(user: any) {
@@ -125,6 +133,25 @@ export class UiFramComponent {
             this.setProfile(this.user)
         }
         jQuery('#profileModal').modal('show');
+
+    }
+    openCreateGropModal(){
+        jQuery('#createGroupModal').modal('show');
+    }
+    resetGroupForm(){
+        this.submittedGroupForm = false;
+        this.newGroupForm.reset();
+        jQuery('#createGroupModal').modal('hide');
+
+    }
+    onSubmitGruopForm(){
+        this.submittedGroupForm = true;
+        console.log("----------->>>",this.newGroupForm.value)
+        if(this.newGroupForm.valid){
+            this.groups.push(this.newGroupForm.value);
+            this.submittedGroupForm = false;
+            this.resetGroupForm();
+        }
 
     }
 }

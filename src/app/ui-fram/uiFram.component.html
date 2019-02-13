@@ -39,15 +39,27 @@
                     <ul>
                         <li class="sidebar-dropdown">
                             <a>
-                                <i class="fa fa-users"></i>
+                                <i class="fa fa-user"></i>
                                 <span>Users</span>
                             </a>
                             <div class="sidebar-submenu" style="display:block;">
-                                <ul *ngIf="users.length">
+                                <ul *ngIf="users.length" class="online_users">
                                     <li *ngFor="let user of users">
                                         <a class="user-status text-overflow cursor-pointer" (click)="activeTabUser=user">
                                             <i class="fa fa-circle" [ngClass]="user.isActive ? 'user-active' : ''"></i>
                                             {{user?.name}}
+                                        </a>
+                                    </li>
+                                </ul>
+                                <a>
+                                    <i class="fa fa-users"></i>
+                                    <span>Group Chat</span> <i class="fa fa-plus add-group-icon" (click)="openCreateGropModal()"></i>
+                                </a>
+                                <ul *ngIf="groups.length" class="online_users">
+                                    <li *ngFor="let group of groups">
+                                        <a class="user-status text-overflow cursor-pointer" (click)="activeTabUser=group">
+                                            <i class="fa fa-circle user-active" [ngClass]="group.isActive ? 'user-active' : ''"></i>
+                                            {{group?.name}}
                                         </a>
                                     </li>
                                 </ul>
@@ -76,6 +88,49 @@
     <chat-box [activeTabUser]="activeTabUser"></chat-box>
     <!-- Main Col END -->
 
+</div>
+
+<div class="modal fade" id="createGroupModal" tabindex="-1" role="dialog" aria-labelledby="createGroupModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">Create Group</h4>
+                <button type="button" class="close" (click)="resetForm()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <form [formGroup]="newGroupForm">
+                    <div class="form-group">
+                        <label>Group Name</label>
+                        <input type="text" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': submittedGroupForm && gf.name.errors }" />
+                        <div *ngIf="submittedGroupForm && gf.name.errors" class="invalid-feedback">
+                            <div *ngIf="gf.name.errors.required">Name is required</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-sm-6">
+                            <div class="form-group">
+                                <label>Users</label>
+                                <select  multiple class="form-control" formControlName="users" [ngClass]="{ 'is-invalid': submittedGroupForm && gf.users.errors }">
+                                    <option *ngFor="let user of users; let i=index" [value]="user">{{user.name}}</option>
+                                </select>
+                                <div *ngIf="submittedGroupForm && gf.users.errors" class="invalid-feedback">
+                                    <div *ngIf="gf.users.errors.required">At least one user is required</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer d-flex">
+                <button class="btn btn-primary" data-dismiss="modal" aria-label="Close" (click)="resetGroupForm()">Cancel
+                </button>
+                <button class="btn btn-success" (click)="onSubmitGruopForm()">Create</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
