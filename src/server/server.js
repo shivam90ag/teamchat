@@ -15,27 +15,38 @@ let userTokens = [];
 
 
 io.on('connection', (socket) => {
-    socket.on('reconnect', (token)=>{
-        if(token && users && users[token]){
+    socket.on('re-connect', (token) => {
+        if (token && users && users[token]) {
             users[token].socketId = socket.id;
+            users[token].isActive = true;
+            socket.broadcast.emit('usersList', users);
         }
     });
-    socket.on('getUsersList',(token)=>{
-        if(token && users[token]){
+    socket.on('disconnect', () => {
+        for (let key in users) {
+            if (users[key].socketId == socket.id) {
+                users[key].socketId = null;
+                users[key].isActive = false;
+                socket.broadcast.emit('usersList', users);
+            }
+        }
+    });
+    socket.on('getUsersList', (token) => {
+        if (token && users[token]) {
             socket.emit('usersList', users);
         }
     })
-    socket.on('sendText',(textObj)=>{
-        if(users && users[textObj.to]){
+    socket.on('sendText', (textObj) => {
+        if (users && users[textObj.to]) {
             let socketId = users[textObj.to].socketId;
-            if(io.sockets.connected[socketId]){
-                io.sockets.connected[socketId].emit('getText',textObj);
+            if (io.sockets.connected[socketId]) {
+                io.sockets.connected[socketId].emit('getText', textObj);
             }
         }
 
     })
     socket.on('createUser', (user) => {
-        if(user && user.token && users[user.token]){
+        if (user && user.token && users[user.token]) {
             delete users[user.token];
         }
         delete user['token'];
