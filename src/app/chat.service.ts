@@ -24,10 +24,7 @@ export class ChatService {
         that=this;
         this.socket.on('connect',function(){ 
             let token = localStorage.getItem("userToken") || '';
-
             if(token){
-            console.log("1----------->",token,that.socket)
-
                 // Send token event right after connect:
                 that.socket.emit('re-connect', token);
             }

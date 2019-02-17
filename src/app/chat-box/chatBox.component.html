@@ -13,20 +13,19 @@
   <!-- Tab panes -->
   <div class="tab-content">
     <div [class]="user?.isTabActive ? 'tab-pane container active' : 'tab-pane container fade'" [id]="user.token" *ngFor="let user of tabs;">
-      <div class="chat_container" [ngClass]="chat.from === user.token ? 'darker' : 'lighter'" *ngFor="let chat of user?.chatBox">
-        <!-- <img [src]="user.flag || 'https://restcountries.eu/data/dza.svg'" [alt]="user.name"> -->
-        
+      <div class="chat_container" [ngClass]="chat.from == user.token ? 'lighter' : 'darker'"
+        *ngFor="let chat of user?.chatBox">
         <p>{{chat?.message}}</p>
-        <!-- <span class="time-right">11:00</span> -->
+        <span *ngIf="chat?.fromName"class="time-right">{{chat?.fromName==selfUser.name? 'You':chat?.fromName}}</span>
       </div>
       <div *ngIf="user?.isTabActive " class="chat-input-pan">
-          <div class="input-group">
-              <textarea class="form-control" aria-label="With textarea" [(ngModel)]="text"></textarea>
-              <div class="input-group-append">
-                  <button class="btn btn-primary " (click)="sendText(user)">Send</button>
-              </div>
-            </div>
+        <div class="input-group">
+          <textarea class="form-control" aria-label="With textarea" [(ngModel)]="text"></textarea>
+          <div class="input-group-append">
+            <button class="btn btn-primary " (click)="sendText(user)">Send</button>
+          </div>
+        </div>
       </div>
+    </div>
   </div>
-</div>
 </div>

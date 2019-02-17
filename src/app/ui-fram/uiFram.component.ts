@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, group } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpService } from '../http.service';
 import { ChatService } from '../chat.service';
@@ -18,6 +18,7 @@ export class UiFramComponent {
     countryList: Array<any> = [];
     selectedCountry: any = {};
     user: any;
+    self:any;
     users: Array<any> = [];
     groups:Array<any>=[];
     token:any;
@@ -36,15 +37,21 @@ export class UiFramComponent {
         this.chatService.socket.on('usersList', (users: any) => {
             let userList: Array<any> = [];
             for (let key in users) {
+                users[key]['token']=key;
                 if (this.token && this.token != key){
-                    users[key]['token']=key;
                     userList.push(users[key])
-
+                }else{
+                    this.self = users[key];
                 }
             }
             this.users = JSON.parse(JSON.stringify(userList));
             this.chatService.users = JSON.parse(JSON.stringify(userList));
         });
+        this.chatService.socket.emit('getGroupsList',this.token);
+        this.chatService.socket.on('groupList',(groups:any)=>{
+            this.groups = JSON.parse(JSON.stringify(groups));
+            this.chatService.groups = JSON.parse(JSON.stringify(groups));
+        })
 
     }
     // convenience getter for easy access to form fields
@@ -146,9 +153,10 @@ export class UiFramComponent {
     }
     onSubmitGruopForm(){
         this.submittedGroupForm = true;
-        console.log("----------->>>",this.newGroupForm.value)
         if(this.newGroupForm.valid){
-            this.groups.push(this.newGroupForm.value);
+            let reqData = Object.assign({}, this.newGroupForm.value);
+            reqData.users.push(this.self);
+            this.chatService.socket.emit('createGroup',reqData)
             this.submittedGroupForm = false;
             this.resetGroupForm();
         }

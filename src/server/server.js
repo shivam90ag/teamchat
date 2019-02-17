@@ -12,6 +12,7 @@ let jwt = require('jsonwebtoken');
 const port = process.env.PORT || 3000;
 let users = {};
 let userTokens = [];
+let groups = [];
 
 
 io.on('connection', (socket) => {
@@ -60,6 +61,36 @@ io.on('connection', (socket) => {
         users[token].name = user.firstName + ' ' + user.lastName;
         socket.broadcast.emit('usersList', users);
         socket.emit('userCreated', token)
+    })
+    socket.on('createGroup', (group) => {
+        groups.push(group);;
+        let token = ''
+
+        for (let user of group.users) {
+            token = token + user.token;
+        }
+        group['token'] = group.name;
+        group['type'] = 'group';
+        socket.broadcast.emit('groupList', groups);
+        socket.emit('groupList', groups);
+    });
+    socket.on('getGroupsList', (token) => {
+        if (token && users[token]) {
+            socket.emit('groupList', groups);
+        }
+    })
+    socket.on('sendTextToGroup', (textObj) => {
+        let group = groups.find(obj => obj.name == textObj.to);
+        if (group) {
+            for (let user of group.users) {
+                if (user.token != textObj.from) {
+                    let socketId = users[user.token].socketId;
+                    if (io.sockets.connected[socketId]) {
+                        io.sockets.connected[socketId].emit('getGroupText', textObj);
+                    }
+                }
+            }
+        }
     })
     socket.on('fetchUser', (token) => {
         let index = userTokens.indexOf(token);
