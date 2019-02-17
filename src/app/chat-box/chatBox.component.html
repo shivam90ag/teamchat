@@ -1,7 +1,7 @@
 <div class="col" style="padding-top: 65px !important;padding-left: 300px;">
 
   <ul class="nav nav-tabs">
-    <li class="nav-item" *ngFor="let user of chatService.users; let i=index">
+    <li class="nav-item" *ngFor="let user of tabs; let i=index">
       <a *ngIf="user?.isTabOpened" class="nav-link" [class]="user?.isTabActive ? 'nav-link show active' : 'nav-link show fade'"
         data-toggle="tab" [href]="'#'+user.token" (click)="selectTab(user)">{{user?.name}}</a>
       <button *ngIf="user?.isTabOpened" type="button" class="close" (click)="closeTab(user,i)">
@@ -12,7 +12,7 @@
 
   <!-- Tab panes -->
   <div class="tab-content">
-    <div [class]="user?.isTabActive ? 'tab-pane container active' : 'tab-pane container fade'" [id]="user.token" *ngFor="let user of chatService.users;">
+    <div [class]="user?.isTabActive ? 'tab-pane container active' : 'tab-pane container fade'" [id]="user.token" *ngFor="let user of tabs;">
       <div class="chat_container" [ngClass]="chat.from === user.token ? 'darker' : 'lighter'" *ngFor="let chat of user?.chatBox">
         <!-- <img [src]="user.flag || 'https://restcountries.eu/data/dza.svg'" [alt]="user.name"> -->
         

@@ -85,7 +85,7 @@
     <!-- sidebar-container END -->
 
     <!-- MAIN -->
-    <chat-box [activeTabUser]="activeTabUser"></chat-box>
+    <chat-box [activeTabUser]="activeTabUser" (closeTabAction)="activeTabUser=''"></chat-box>
     <!-- Main Col END -->
 
 </div>

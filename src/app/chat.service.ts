@@ -10,7 +10,8 @@ var that:any;
 export class ChatService {
     private url = 'http://localhost:3000';
     public socket: any;
-    public users: Array<any>;
+    public users: Array<any>=[];
+    public groups: Array<any>=[];
     _state: InternalStateType = {};
 
     constructor() {

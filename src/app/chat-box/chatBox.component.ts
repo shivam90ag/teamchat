@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output } from '@angular/core';
 import { ChatService } from '../chat.service';
+import { EventEmitter } from '@angular/common/src/facade/async';
 
 @Component({
   selector: 'chat-box',
@@ -7,8 +8,9 @@ import { ChatService } from '../chat.service';
   styleUrls: ['./chatBox.component.css']
 })
 export class ChatBoxComponent {
-  openTabs: Array<any> = [];
+  tabs: Array<any> = [];
   @Input() activeTabUser: any;
+  @Output() closeTabAction = new EventEmitter();
   activatedTabToken: any;
   text: any;
   constructor(public chatService: ChatService) { }
@@ -26,38 +28,44 @@ export class ChatBoxComponent {
   }
   ngOnChanges() {
     this.deactivateAllTab();
-    if (this.chatService.users && this.chatService.users.length) {
-      let obj = this.chatService.users.find(obj => obj.token === this.activeTabUser.token);
+    this.tabs = [...this.chatService.users,...this.chatService.groups]
+    if (this.tabs && this.tabs.length && this.activeTabUser) {
+      console.log("_______1",this.chatService.users)
+      let obj = this.tabs.find(obj => obj.token === this.activeTabUser.token);
+      console.log("_______2",obj)
+
       obj.isTabOpened = true;
       obj.isTabActive = true;
     }
 
   }
   closeTab(user: any, index: number) {
+    this.closeTabAction.emit(true);
     user.isTabOpened = false;
     user.isTabActive = false;
     if (index > 0) {
       for (let i = index - 1; i >= 0; i--) {
-        if (this.chatService.users[i].isTabOpened) {
-          this.chatService.users[i].isTabActive = true;
+        if (this.tabs[i].isTabOpened) {
+          this.tabs[i].isTabActive = true;
           return
         }
       }
       for (let i = index - 1; i <= this.chatService.users.length; i++) {
-        if (this.chatService.users[i].isTabOpened) {
-          this.chatService.users[i].isTabActive = true;
+        if (this.tabs[i].isTabOpened) {
+          this.tabs[i].isTabActive = true;
           return
         }
       }
     }
   }
   deactivateAllTab() {
-    if (this.chatService.users)
-      for (let u of this.chatService.users) {
+    if (this.tabs)
+      for (let u of this.tabs) {
         u.isTabActive = false;
       }
   }
   selectTab(user: any) {
+    console.log("=========>1")
     this.deactivateAllTab();
     user.isTabActive = true;
     user.isTabOpened = true;
